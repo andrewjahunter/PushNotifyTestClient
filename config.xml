@@ -72,8 +72,8 @@
   <plugin name="File" value="org.apache.cordova.FileUtils" />
   <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer" />
   <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
-  <!--<gap:plugin name="com.phonegap.plugins.pushplugin" />-->
-  <gap:plugin name="com.adobe.plugins.pushplugin" />
+  <gap:plugin name="com.phonegap.plugins.pushplugin" />
+ 
   
   <!--
         <gap:plugin name="Example" />
