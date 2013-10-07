@@ -59,7 +59,7 @@
         function GetNewGCMRegID() {
             var pushNotification = window.plugins.pushNotification;
             alert("got ref to push notification")
-            pushNotification.register(pushNotifySuccess, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
+            pushNotification.register(successHandler, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
             alert("push notifiy has registered")
         }
 
@@ -95,7 +95,7 @@
         }
 
         // result contains any message sent from the plugin call
-       function pushNotifySuccess(result) {
+       function successHandler(result) {
             alert('Push Notify Callback Success! Result = '+result)
        }
 
