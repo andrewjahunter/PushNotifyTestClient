@@ -11,9 +11,10 @@
     <script type="text/javascript" src="PushNotification.js"></script>
 
     <script type="text/javascript" charset="utf-8">
+
         window.gdd = window.gdd || {};
-        window.GCMRegID = "None";
-      
+        window.DeviceID = "None";
+
 
         $(document).ready(function () {
 
@@ -22,30 +23,39 @@
             });
 
 
-            $("#btnGetNewRegId").on("click", function () {
-                GetNewGCMRegID()              
+            $("#btnGetGCMNewRegId").on("click", function () {
+                try {
+                    var pushNotification = window.plugins.pushNotification;
+                    alert("got ref to push notification")
+                    pushNotification.register(successHandler, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
+                    alert("push notifiy has registered")
+                }
+                catch (e) {
+                    alert("Error on Getting GCM RegID: " + e)
+                }
             });
 
+            $("#btnGetAPNToken").on("click", function () {
+                alert("Lets Go")
+            });
 
             
-            $("#GCMRegID").html(window.GCMRegID);
+
+            $("#DeviceID").html(window.DeviceID);
         });
 
-       
 
         function sendRegIdToDevServer() {
             $.mobile.loading("show");
             var webApiBaseUrl = "http://41.86.98.79/webapi/api/"
-            var headers = { "apiKey": "33B94609-CB5A-444F-AA08-FA12C716A873", "appInfo": "appcode:102|version:1.0" }
-            var source = webApiBaseUrl + "open/GetGCMRegID";
+            var headers = { "apiKey": "33B94609-CB5A-444F-AA08-FA12C716A873", "appInfo": "appcode:1000|version:1.0" }
+            var source = webApiBaseUrl + "open/CaptureDeviceID";
             $.ajax(source, {
                 type: "GET",
                 headers: headers,
-                data: { "id": window.GCMRegID },
+                data: { "id": window.DeviceID },
                 success: function (response) {
                     $.mobile.loading("hide");
-                    
-   
                 },
                 error: function (jqxhr, status, errorMsg) {
                     $.mobile.loading("hide");
@@ -56,28 +66,59 @@
 
         }
 
-        function GetNewGCMRegID() {
-            var pushNotification = window.plugins.pushNotification;
-            alert("got ref to push notification")
-            pushNotification.register(successHandler, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
-            alert("push notifiy has registered")
+        // result contains any message sent from the plugin call
+        function successHandler(result) {
+            alert('Push Notify Callback Success! Result = ' + result)
         }
+
+        function pushNotifyFail(error) {
+            alert("Push Notify Reg has failed with this error: " + error);
+        }
+
+        function onNotificationGCM(e) {
+            alert("Got a message");
+            alert(JSON.stringify(e));
+            switch (e.event) {
+                case 'registered':
+                    if (e.regid.length > 0) {
+                        window.DeviceID = e.regid;
+                        //sendRegIdToDevServer();
+                        $("#DeviceID").html(window.DeviceID);
+                       
+                    }
+                    break;
+
+                case 'message':
+                    // this is the actual push notification. its format depends on the data model from the push server
+                    alert('message = ' + e.message + ' msgcnt = ' + e.msgcnt);
+                    break;
+
+                case 'error':
+                    alert('GCM error = ' + e.msg);
+                    break;
+
+                default:
+                    alert('An unknown GCM event has occurred');
+                    break;
+            }
+        }
+
 
         // Wait for Cordova to load
         function indexPageLoaded() {
-             alert("index onload called")
+            alert("index onload called")
             document.addEventListener("deviceready", onDeviceReady, false);
 
         }
 
         // Cordova is ready
         function onDeviceReady() {
-             alert("Device ready has fired yes:")
+            alert("Device ready has fired yes:")
             //navigator.splashscreen.hide();
             //window.gdd = window.gdd || {};
 
             try {
-               
+
                 document.addEventListener("resume", onAppResume, false);
 
                 document.addEventListener("menubutton", onMenuKeyDown, false);
@@ -94,52 +135,11 @@
 
         }
 
-        // result contains any message sent from the plugin call
-       function successHandler(result) {
-            alert('Push Notify Callback Success! Result = '+result)
-       }
-
-       function  pushNotifyFail(error) {
-            alert("Push Notify Reg has failed with this error: " + error);
-       }
-
-      
-       function onNotificationGCM(e) {
-           alert("Got a message");
-           alert(JSON.stringify(e));
-            switch( e.event )
-            {
-                case 'registered':
-                    if ( e.regid.length > 0 )
-                    {
-                        window.GCMRegID = e.regid;
-                        //sendRegIdToDevServer();
-                        $("#GCMRegID").html(window.GCMRegID);
-                        //console.log("Regid " + e.regid);
-                        alert('registration id = '+ e.regid);
-                    }
-                    break;
- 
-                case 'message':
-                    // this is the actual push notification. its format depends on the data model from the push server
-                    alert('message = '+e.message+' msgcnt = '+e.msgcnt);
-                    break;
- 
-                case 'error':
-                    alert('GCM error = '+e.msg);
-                    break;
- 
-                default:
-                    alert('An unknown GCM event has occurred');
-                    break;
-            }
-        }
-
 
         function onAppResume() {
             try {
-                 alert("App Resume event fired")
-               
+                alert("App Resume event fired")
+
             }
             catch (err) {
                 alert("Error onAppResume: " + err)
@@ -148,9 +148,9 @@
 
         function wentOnline() {
             try {
-                 alert("Online fired")
+                alert("Online fired")
 
-               
+
             }
             catch (err) {
                 alert("Error occured when app came online: " + err)
@@ -160,8 +160,8 @@
 
         function wentOffline() {
             try {
-                 alert("offline fired")
-                
+                alert("offline fired")
+
 
             }
             catch (err) {
@@ -174,7 +174,7 @@
 
         function onMenuKeyDown() {
             try {
-                 alert("home key was pressed")
+                alert("home key was pressed")
             }
             catch (err) {
 
@@ -196,11 +196,29 @@
         </div>
 
         <div data-role="content">
-            <p class="ui-content ui-body-c">This is a simple app used to test aspects of the Android and iOS messaging services. Project ID: 385529235062</p>
-           <a href="#" data-theme="b" id="btnSendRegIDToServer" data-role="button">Send RegId to Dev Server</a>
-            
-             <a href="#" data-theme="b" id="btnGetNewRegId" data-role="button">Get New RegID</a>
-            <p id="GCMRegID"></p>
+            <p class="ui-content ui-body-c">This is a simple app used to test aspects of the Android and iOS messaging services. </p>
+
+
+            <div class="ui-content ui-body-d">
+                <div>
+                    <h3 style="text-align: center">Google Cloud Messaging (Project ID: 385529235062)</h3>
+                </div>
+                <a href="#" data-theme="b" id="btnGetGCMNewRegId" data-role="button">Get New GCM RegID</a>
+
+            </div>
+            <br /><br />
+             <div class="ui-content ui-body-d">
+                <div>
+                    <h3 style="text-align: center">Apple Notification Services</h3>
+                </div>
+                <a href="#" data-theme="b" id="btnGetAPNToken" data-role="button">Get New APN Token</a>
+
+            </div>
+
+
+            <a href="#" data-theme="c" id="btnSendRegIDToServer" data-role="button">Send DeviceID to Server</a>
+
+            <div>DeviceID:<span id="DeviceID"></span></div>
         </div>
 
         <div data-role="footer">
@@ -211,6 +229,6 @@
     </div>
 
 </body>
-    <script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
 
 </html>
