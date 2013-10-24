@@ -36,6 +36,19 @@
             });
 
             $("#btnGetAPNToken").on("click", function () {
+                var pushNotification = window.plugins.pushNotification;
+
+                pushNotification.register(
+                        tokenHandler,
+                        pushNotifyFail, {
+                           "badge": "true",
+                           "sound": "true",
+                           "alert": "true",
+                           "ecb": "onNotificationAPN"
+                       });
+
+
+
                 alert("Lets Go")
             });
 
@@ -73,6 +86,38 @@
 
         function pushNotifyFail(error) {
             alert("Push Notify Reg has failed with this error: " + error);
+        }
+
+        function tokenHandler(result) {
+            // Your iOS push server needs to know the token before it can push to this device
+            // here is where you might want to send it the token for later use.
+            alert('iOS device token = ' + result);
+            window.DeviceID = result;
+            $("#DeviceID").html(window.DeviceID);
+        }
+
+
+        // iOS
+        function onNotificationAPN(event) {
+            alert("iOs Notification event: " + JSON.stringify(event));
+
+            var pushNotification = window.plugins.pushNotification;
+
+            if (event.alert) {
+                alert("Alert is about to fire")
+                navigator.notification.alert(event.alert);
+            }
+
+            if (event.sound) {
+                alert("Sound is about to play")
+                var snd = new Media(event.sound);
+                snd.play();
+            }
+
+            if (event.badge) {
+                alert("Badge number about to be set")
+                pushNotification.setApplicationIconBadgeNumber(successHandler, pushNotifyFail, event.badge);
+            }
         }
 
         function onNotificationGCM(e) {
