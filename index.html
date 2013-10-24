@@ -36,8 +36,9 @@
             });
 
             $("#btnGetAPNToken").on("click", function () {
+                alert("register device starting")
                 var pushNotification = window.plugins.pushNotification;
-
+                alert("Token handler: " + tokenHandler);
                 pushNotification.register(
                         tokenHandler,
                         pushNotifyFail, {
@@ -88,7 +89,7 @@
             alert("Push Notify Reg has failed with this error: " + error);
         }
 
-        function tokenHandler(result) {
+         tokenHandler = function (result) {
             // Your iOS push server needs to know the token before it can push to this device
             // here is where you might want to send it the token for later use.
             alert('iOS device token = ' + result);
@@ -98,7 +99,7 @@
 
 
         // iOS
-        function onNotificationAPN(event) {
+         onNotificationAPN = function (event) {
             alert("iOs Notification event: " + JSON.stringify(event));
 
             var pushNotification = window.plugins.pushNotification;
