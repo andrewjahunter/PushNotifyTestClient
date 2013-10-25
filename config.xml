@@ -73,6 +73,7 @@
   <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer" />
   <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
   <gap:plugin name="com.phonegap.plugins.pushplugin" />
+
  
   
   <!--
