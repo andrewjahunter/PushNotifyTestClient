@@ -39,21 +39,17 @@
                 //alert("register device starting")
                // var pushNotification = window.plugins.pushNotification;
                // alert("Token handler: " + window.tokenHandler);
-                //window.pushNotification.register(
-                //         window.tokenHandler,
-                //        pushNotifyFail, {
-                //           "badge": "true",
-                //           "sound": "true",
-                //           "alert": "true",
-                //           "ecb": "onNotificationAPN"
-                //        });
+                window.pushNotification.register(
+                         window.tokenHandler,
+                        pushNotifyFail, {
+                           "badge": "true",
+                           "sound": "true",
+                           "alert": "true",
+                           "ecb": "onNotificationAPN"
+                        });
 
 
-               // var pushNotification = window.plugins.pushNotification;
-                window.pushNotification.registerDevice({ alert: true, badge: true, sound: true }, function (status) {
-                    alert( JSON.stringify(['registerDevice status: ', status]));
-                    alert("DevToken:" + status.deviceToken);
-                });
+              
 
 
 
