@@ -14,7 +14,7 @@
 
         window.gdd = window.gdd || {};
         window.DeviceID = "None";
-
+        window.pushNotification = null;
 
         $(document).ready(function () {
 
@@ -25,9 +25,9 @@
 
             $("#btnGetGCMNewRegId").on("click", function () {
                 try {
-                    var pushNotification = window.plugins.pushNotification;
+                    //var pushNotification = window.plugins.pushNotification;
                     alert("got ref to push notification")
-                    pushNotification.register(successHandler, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
+                    window.pushNotification.register(successHandler, pushNotifyFail, { "senderID": "385529235062", "ecb": "onNotificationGCM" });
                     alert("push notifiy has registered")
                 }
                 catch (e) {
@@ -37,9 +37,9 @@
 
             $("#btnGetAPNToken").on("click", function () {
                 //alert("register device starting")
-                var pushNotification = window.plugins.pushNotification;
+               // var pushNotification = window.plugins.pushNotification;
                // alert("Token handler: " + window.tokenHandler);
-                pushNotification.register(
+                window.pushNotification.register(
                          window.tokenHandler,
                         pushNotifyFail, {
                            "badge": "true",
@@ -102,7 +102,7 @@
          onNotificationAPN = function (event) {
             alert("iOs Notification event: " + JSON.stringify(event));
 
-            var pushNotification = window.plugins.pushNotification;
+          //  var pushNotification = window.plugins.pushNotification;
 
             if (event.alert) {
                 alert("Alert is about to fire")
@@ -117,7 +117,7 @@
 
             if (event.badge) {
                 alert("Badge number about to be set")
-                pushNotification.setApplicationIconBadgeNumber(successHandler, pushNotifyFail, event.badge);
+                window.pushNotification.setApplicationIconBadgeNumber(successHandler, pushNotifyFail, event.badge);
             }
         }
 
@@ -160,6 +160,9 @@
         // Cordova is ready
         function onDeviceReady() {
             alert("Device ready has fired yes and amen:")
+            window.pushNotification = window.plugins.pushNotification;
+            alert("Push Set")
+            alert("Push:" + window.pushNotification);
             navigator.splashscreen.hide();
             //window.gdd = window.gdd || {};
 
